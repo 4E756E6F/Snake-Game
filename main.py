@@ -41,7 +41,8 @@ class FRUIT:
         x_pos = int(self.pos.x * cell_size)
         y_pos = int(self.pos.y * cell_size)
         fruit_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
-        pygame.draw.rect(screen, (255, 25, 25), fruit_rect)
+        screen.blit(ramen, fruit_rect)
+        #pygame.draw.rect(screen, (255, 25, 25), fruit_rect)
 
     def randomize(self):
         self.x = random.randint(0, cell_number - 1)
@@ -86,6 +87,8 @@ cell_number = 25
 screen = pygame.display.set_mode(
     (cell_size * cell_number, cell_size * cell_number))
 clock = pygame.time.Clock()
+ramen = pygame.image.load('Graphics/ramen.png').convert_alpha()
+ramen = pygame.transform.scale(ramen, (52, 52))
 
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)
