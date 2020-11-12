@@ -258,4 +258,4 @@ while True:
     main_game.draw_elements()
     pygame.display.update()
     # * Predifine game framerate
-    clock.tick(144)
+    clock.tick(60)
