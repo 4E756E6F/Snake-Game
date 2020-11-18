@@ -54,9 +54,9 @@ class SNAKE:
         self.update_head_graphics()
         self.update_tail_graphics()
         for index, block in enumerate(self.body):
-            x_pos = int(block.x * cell_size)
-            y_pos = int(block.y * cell_size)
-            block_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+            x_pos = int(block.x * CELL_SIZE)
+            y_pos = int(block.y * CELL_SIZE)
+            block_rect = pygame.Rect(x_pos, y_pos, CELL_SIZE, CELL_SIZE)
             if index == 0:
                 screen.blit(self.head, block_rect)
             elif index == len(self.body) - 1:
@@ -135,15 +135,15 @@ class FRUIT:
         self.randomize()
 
     def draw_fruit(self):
-        x_pos = int(self.pos.x * cell_size)
-        y_pos = int(self.pos.y * cell_size)
-        fruit_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+        x_pos = int(self.pos.x * CELL_SIZE)
+        y_pos = int(self.pos.y * CELL_SIZE)
+        fruit_rect = pygame.Rect(x_pos, y_pos, CELL_SIZE, CELL_SIZE)
         screen.blit(ramen, fruit_rect)
         #pygame.draw.rect(screen, (255, 25, 25), fruit_rect)
 
     def randomize(self):
-        self.x = random.randint(0, cell_number - 1)
-        self.y = random.randint(0, cell_number - 1)
+        self.x = random.randint(0, CELL_NUMBER - 1)
+        self.y = random.randint(0, CELL_NUMBER - 1)
         self.pos = Vector2(self.x, self.y)
 
 
@@ -173,7 +173,7 @@ class MAIN:
                 self.fruit.randomize()
 
     def check_colision(self):
-        if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
+        if not 0 <= self.snake.body[0].x < CELL_NUMBER or not 0 <= self.snake.body[0].y < CELL_NUMBER:
             # self.snake.play_gameover_sound()
             self.game_over()
         for block in self.snake.body[1:]:
@@ -183,35 +183,35 @@ class MAIN:
 
     # * Draw grass pattern
     def draw_grass(self):
-        grass_color = (64, 64, 64)
-        for row in range(cell_number):
+        GRASS_COLOR = (64, 64, 64)
+        for row in range(CELL_NUMBER):
             if row % 2 == 0:
-                for col in range(cell_number):
+                for col in range(CELL_NUMBER):
                     if col % 2 == 0:
                         grass_rect = pygame.Rect(
-                            col * cell_size, row * cell_size, cell_size, cell_size)
-                        pygame.draw.rect(screen, grass_color, grass_rect)
+                            col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+                        pygame.draw.rect(screen, GRASS_COLOR, grass_rect)
             else:
-                for col in range(cell_number):
+                for col in range(CELL_NUMBER):
                     if col % 2 != 0:
                         grass_rect = pygame.Rect(
-                            col * cell_size, row * cell_size, cell_size, cell_size)
-                        pygame.draw.rect(screen, grass_color, grass_rect)
+                            col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+                        pygame.draw.rect(screen, GRASS_COLOR, grass_rect)
 
     def draw_score(self):
         score_text = str(len(self.snake.body) - 3)
-        score_surface = game_font.render(score_text, True, (255, 250, 250))
-        score_x = int(cell_size * cell_number - 50)
-        score_y = int(cell_size * cell_number - 55)
+        score_surface = GAME_FONT.render(score_text, True, WHITE)
+        score_x = int(CELL_SIZE * CELL_NUMBER - 50)
+        score_y = int(CELL_SIZE * CELL_NUMBER - 55)
         score_rect = score_surface.get_rect(center=(score_x, score_y))
         ramen_rect = ramen.get_rect(
             midright=(score_rect.left, score_rect.centery))
         background_rect = pygame.Rect(
             ramen_rect.left, ramen_rect.top, ramen_rect.width + score_rect.width + 5, ramen_rect.height)
-        pygame.draw.rect(screen, (32, 32, 32), background_rect)
+        pygame.draw.rect(screen, BACKGROUND_COLOR, background_rect)
         screen.blit(score_surface, score_rect)
         screen.blit(ramen, ramen_rect)
-        pygame.draw.rect(screen, (255, 250, 250), background_rect, 2)
+        pygame.draw.rect(screen, WHITE, background_rect, 2)
 
     def game_over(self):
         self.snake.reset()
@@ -219,14 +219,20 @@ class MAIN:
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
-cell_size = 40
-cell_number = 25
+
+# ? CONSTATNS
+CELL_SIZE = 40
+CELL_NUMBER = 25
+BACKGROUND_COLOR = (32, 32, 32)
+WHITE = (255, 250, 250)
+GAME_FONT = pygame.font.Font('Font/Bohemian Typewriter.ttf', 25)
+
 screen = pygame.display.set_mode(
-    (cell_size * cell_number, cell_size * cell_number))
+    (CELL_SIZE * CELL_NUMBER, CELL_SIZE * CELL_NUMBER))
 clock = pygame.time.Clock()
 ramen = pygame.image.load('Graphics/ramen.png').convert_alpha()
 ramen = pygame.transform.scale(ramen, (35, 35))
-game_font = pygame.font.Font('Font/Bohemian Typewriter.ttf', 25)
+
 
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)
@@ -235,8 +241,7 @@ main_game = MAIN()
 
 while True:
     for event in pygame.event.get():
-        if event.type == pygame.quit:
-            pygame.quit()
+        if event.type == pygame.QUIT:
             sys.exit()
         if event.type == SCREEN_UPDATE:
             main_game.update()
@@ -253,8 +258,7 @@ while True:
             if event.key == pygame.K_LEFT:
                 if main_game.snake.direction.x != 1:
                     main_game.snake.direction = Vector2(-1, 0)
-
-    screen.fill((32, 32, 32))
+    screen.fill(BACKGROUND_COLOR)
     main_game.draw_elements()
     pygame.display.update()
     # * Predifine game framerate
