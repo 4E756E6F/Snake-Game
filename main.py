@@ -220,7 +220,7 @@ class MAIN:
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 
-# ? CONSTATNS
+# ? CONSTANTS
 CELL_SIZE = 40
 CELL_NUMBER = 25
 BACKGROUND_COLOR = (32, 32, 32)
